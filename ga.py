@@ -63,10 +63,10 @@ def compute_fitness_f2(population) :
     return fitness_pro, fitness
 
 
-def wheel_select(population) :
+def wheel_select(population, fitness_pro) :
     pointer = np.random.rand()
     probability = 0.
-    fitness_pro, _ = compute_fitness_f2(population)
+    # fitness_pro, _ = compute_fitness_f2(population)
     sum_fitness = sum(fitness_pro)
     num_indiv = len(fitness_pro)
 
@@ -81,8 +81,9 @@ def wheel_select(population) :
 def ga_select(population) : 
     num_indiv = len(population)
     new_population = []
+    fitness_pro, _ = compute_fitness_f2(population)
     for i in range(num_indiv) :
-        indiv_select = wheel_select(population)
+        indiv_select = wheel_select(population, fitness_pro)
         new_population.append(indiv_select)
     return new_population
 
@@ -207,13 +208,13 @@ def ga_mutate(population, P_mutate = 0.001) :
     return new_population
 
 
-def genetic_algorithm(domain_min, domain_max, num_iteration = 150) : 
+def genetic_algorithm(domain_min, domain_max, num_iteration = 120) : 
     population = population_generate(domain_min, domain_max)
     fitness_average = []
     for i in range(num_iteration) : 
         population = ga_select(population)
         population = ga_cross(population)
-        # population = ga_mutate(population)
+        population = ga_mutate(population)
         _, fitness = compute_fitness_f2(population)
         fitness_average.append(sum(fitness) / len(fitness))
     return population, fitness_average
